@@ -12,6 +12,8 @@ Code your AI in this file.
 
 depth = 1
 infinity = 10000
+alpha = -infinity
+beta = infinity
 
 
 def make_play(board, your_team, last_move):
@@ -48,7 +50,7 @@ def make_play(board, your_team, last_move):
         for current_move in all_moves:
             new_board = board.copy_state()
             new_board.play_command(Command(current_move[0], current_move[1]))
-            val = minimax(new_board, 2, True)
+            val = minimax(new_board, 4, alpha, beta, True)
             if val < best_val:
                 best_move = current_move
 
@@ -70,7 +72,8 @@ def endgame(board):
     return board.get_winner() is not None
 
 
-def minimax(board, depth, maximizingPlayer):
+def minimax(board, depth, alpha, beta, maximizingPlayer):
+
     if depth == 0 or endgame(board):
         return calscore(board)
 
@@ -80,8 +83,11 @@ def minimax(board, depth, maximizingPlayer):
         for current_move in all_white_moves:
             new_board = board.copy_state()
             new_board.play_command(Command(current_move[0], current_move[1]))
-            eval = minimax(new_board, depth - 1, False)
+            eval = minimax(new_board, depth - 1, alpha, beta, False)
             max_eval = max(max_eval, eval)
+            alpha = max(alpha, eval)
+            if beta <= alpha:
+                break
         return max_eval
 
     else:
@@ -90,8 +96,11 @@ def minimax(board, depth, maximizingPlayer):
         for current_move in all_black_moves:
             new_board = board.copy_state()
             new_board.play_command(Command(current_move[0], current_move[1]))
-            eval = minimax(new_board, depth - 1, True)
+            eval = minimax(new_board, depth - 1, alpha, beta, True)
             min_eval = min(min_eval, eval)
+            beta = min(beta, eval)
+            if beta <= alpha:
+                break
         return min_eval
 
 
