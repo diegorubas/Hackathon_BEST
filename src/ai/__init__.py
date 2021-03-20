@@ -3,7 +3,8 @@ from src.game.entities import Team, Queen
 from src.game.geo import Vec2I
 from src.game.game_exception import GameException
 from src.ui.ui import UI
-from src.ai.my_ai_random import make_play
+# from src.ai.my_ai_random import make_play #changer pour tester
+from src.ai.my_ai import make_play
 from src.game.command import Command
 import pygame
 import time
@@ -54,7 +55,7 @@ if __name__ == '__main__':
     graphics.open_window()
     graphics.draw()
 
-    AI = [Team.WHITE, Team.BLACK]
+    AI = [Team.BLACK]
 
     last_move = None
 
