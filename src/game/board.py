@@ -122,6 +122,13 @@ class Board(Observable, Observer):
 
         # Cannot move opponent's pieces
         if piece_from.get_team() != self._team_turn:
+            if piece_from.is_queen:
+                print("the piece is queen")
+            else:
+                print("the piece is baby")
+            print("from team " + str(piece_from.get_team()))
+            print("at position " + str(piece_from.get_position()))
+            print("the turn is " + str(self._team_turn))
             raise MoveOpponentPieceException('Cannot move opponent\'s pieces.')
 
         legal_moves = piece_from.get_legal_moves(self)

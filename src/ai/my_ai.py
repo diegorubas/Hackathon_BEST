@@ -37,16 +37,20 @@ def make_play(board, your_team, last_move):
     best_move = all_moves[0]
     if your_team == Team.WHITE:
         best_val = -infinity
-        maximizing_player = False
+        for current_move in all_moves:
+            new_board = board.copy_state()
+            new_board.play_command(Command(current_move[0], current_move[1]))
+            val = minimax(new_board, 2, False)
+            if val > best_val:
+                best_move = current_move
     else:
         best_val = +infinity
-        maximizing_player = True
-    for current_move in all_moves:
-        new_board = board.copy_state()
-        new_board.play_command(Command(current_move[0], current_move[1]))
-        val = minimax(new_board, 2, maximizing_player)
-        if val > best_val:
-            best_move = current_move
+        for current_move in all_moves:
+            new_board = board.copy_state()
+            new_board.play_command(Command(current_move[0], current_move[1]))
+            val = minimax(new_board, 2, True)
+            if val < best_val:
+                best_move = current_move
 
     return best_move
 
@@ -59,12 +63,11 @@ def calscore(new_board):
             score += 1
         else:
             score -= 1
-
     return score
 
 
 def endgame(board):
-    return board.search_queen(Team.WHITE) is None or board.search_queen(Team.BLACK) is None
+    return board.get_winner() is not None
 
 
 def minimax(board, depth, maximizingPlayer):
@@ -73,8 +76,8 @@ def minimax(board, depth, maximizingPlayer):
 
     if maximizingPlayer:
         max_eval = -infinity
-        all_moves = board.get_legal_moves(Team.WHITE)
-        for current_move in all_moves:
+        all_white_moves = board.get_legal_moves(Team.WHITE)
+        for current_move in all_white_moves:
             new_board = board.copy_state()
             new_board.play_command(Command(current_move[0], current_move[1]))
             eval = minimax(new_board, depth - 1, False)
@@ -83,12 +86,12 @@ def minimax(board, depth, maximizingPlayer):
 
     else:
         min_eval = +infinity
-        all_moves = board.get_legal_moves(Team.BLACK)
-        for current_move in all_moves:
+        all_black_moves = board.get_legal_moves(Team.BLACK)
+        for current_move in all_black_moves:
             new_board = board.copy_state()
             new_board.play_command(Command(current_move[0], current_move[1]))
             eval = minimax(new_board, depth - 1, True)
-            mineval = min(min_eval, eval)
+            min_eval = min(min_eval, eval)
         return min_eval
 
 
